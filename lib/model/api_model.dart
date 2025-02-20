@@ -8,9 +8,9 @@ class User{
     required this.id,
     required this.name,
     required this.email,
-    required this.department});
-
-  factory User.fromJsn(Map<String,dynamic> json ){
-    return User(id: json['id'], name: json['name'], email: json['email'] ,department: json['department']);
+    required this.department
+  });
+  factory User.formJson(Map<String,dynamic> json){
+    return User(id: json['id'], name: json['name'], email: json['email'], department: json['department']);
   }
 }
