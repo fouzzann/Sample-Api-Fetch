@@ -5,40 +5,46 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static String apiUrl = "https://meetingapi.infolksgroup.com/api/user";
+
   static Future<List<User>> fetchUser() async {
     try {
       final response = await http.get(Uri.parse(apiUrl), headers: {
-        'Access': 'application/json',
-        'Content-Type': 'application/json',
+        "Access": "application/json",
+        "Content-Type": "application/json",
       });
 
       switch (response.statusCode) {
         case 200:
-          final List<dynamic> decodeData = json.decode(response.body);
-          return decodeData.map((json) => User.formJson(json)).toList();
-
+          final List<dynamic> decodedData = json.decode(response.body);
+          return decodedData.map((json) => User.fromJson(json)).toList();
+        // Bad Request
         case 400:
-          throw Exception('');
-
+          throw Exception(
+              'Bad Request - Please check your input data and try again. There seems to be an issue with the information you provided');
+        // Unauthorized
         case 401:
-          throw Exception('');
-
+          throw Exception(
+              'Unauthorized: Please check your login credentials and try again');
+        // Access Denied
         case 403:
-          throw Exception('');
-
+          throw Exception(
+              'Access Denied: You do not have permission to access this resource');
+        // Page Not Found
         case 404:
-          throw Exception('');
-
+          throw Exception(
+              """Page Not Found," "Oops, looks like you've stumbled upon a missing page," or "The requested page could not be found""");
+        // something went wrong
         case 500:
-          throw Exception('');
-
+          throw Exception('Oops, something went wrong on our end. Please try again later');
+        // Service Unavailable
         case 503:
-          throw Exception('');
-
+          throw Exception('Service Unavailable - Our server is currently experiencing high traffic and is temporarily unable to process your request. Please try again later.');
+        // default message
         default:
-          throw Exception('');
+          throw Exception('An unexpected error occurred on the server. Please try again later.');
       }
-    } catch (e) {}
-    throw Exception('');
+    } catch (e) {
+      throw Exception("Exception $e");
+    }
   }
 }
