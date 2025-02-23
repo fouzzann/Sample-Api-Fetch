@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sample_api_practice/service/api_service.dart';
 import 'package:sample_api_practice/utils/them.dart';
+import 'package:sample_api_practice/views/screens/api_home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +12,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emialController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Image(image: AssetImage('assets/login image.png')),
               ),
               TextFormField(
+                controller: emialController,
                 decoration: InputDecoration(
                     hintText: 'Enter Email',
                     prefixIcon: Icon(
@@ -35,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(color: AppColors.primaryColor, width: 2)),
+                        borderSide: BorderSide(
+                            color: AppColors.primaryColor, width: 2)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
@@ -44,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 13,
               ),
               TextFormField(
+                controller: passwordController,
                 decoration: InputDecoration(
                     hintText: 'Enter Password',
                     prefixIcon: Icon(
@@ -52,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(color: AppColors.primaryColor, width: 2)),
+                        borderSide: BorderSide(
+                            color: AppColors.primaryColor, width: 2)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
               ),
@@ -61,26 +69,38 @@ class _LoginPageState extends State<LoginPage> {
                 height: 25,
               ),
               GestureDetector(
-                onTap: () {
-                  // TODO:
+                onTap: () async {
+                  bool success = await ApiService.login(
+                    emialController.text,
+                    passwordController.text,
+                  );
+
+                  if (success) {
+                    print("✅ Successfully Logged In!");
+                    Get.to(()=>UserListScreen());
+                  } else {  
+                    print("❌ Login Failed!");
+                  }
                 },
                 child: Container(
-                    height: 45,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                            color: AppColors.backgroundColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                  height: 45,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        color: AppColors.backgroundColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
                       ),
-                    )),
-              )
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

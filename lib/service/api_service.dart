@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static String apiUrl = "https://meetingapi.infolksgroup.com/api/user";
+  static String loginUrl ='https://reqres.in/api/register';
+
 
   static Future<List<User>> fetchUser() async {
     try {
@@ -47,4 +49,32 @@ class ApiService {
       throw Exception("Exception $e");
     }
   }
+ static Future<bool> login(String email, String password) async {
+  try {
+    final response = await http.post(
+      Uri.parse(loginUrl),
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: json.encode({
+        "email": email,
+        "password": password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print("✅ Login Successful: ${response.body}"); 
+      return true;  // Return true for success
+    } else {
+      print("❌ Login Failed: ${response.statusCode} - ${response.body}");
+      return false; // Return false for failure
+    }
+  } catch (e) {
+    print("⚠️ Error: $e");
+    return false;
+  }
+}
+
+
 }
