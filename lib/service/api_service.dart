@@ -5,8 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static String apiUrl = "https://meetingapi.infolksgroup.com/api/user";
-  static String loginUrl ='https://reqres.in/api/register';
-
+  static String loginUrl = 'https://reqres.in/api/register';
 
   static Future<List<User>> fetchUser() async {
     try {
@@ -37,44 +36,41 @@ class ApiService {
               """Page Not Found," "Oops, looks like you've stumbled upon a missing page," or "The requested page could not be found""");
         // something went wrong
         case 500:
-          throw Exception('Oops, something went wrong on our end. Please try again later');
+          throw Exception(
+              'Oops, something went wrong on our end. Please try again later');
         // Service Unavailable
         case 503:
-          throw Exception('Service Unavailable - Our server is currently experiencing high traffic and is temporarily unable to process your request. Please try again later.');
+          throw Exception(
+              'Service Unavailable - Our server is currently experiencing high traffic and is temporarily unable to process your request. Please try again later.');
         // default message
         default:
-          throw Exception('An unexpected error occurred on the server. Please try again later.');
+          throw Exception(
+              'An unexpected error occurred on the server. Please try again later.');
       }
     } catch (e) {
       throw Exception("Exception $e");
     }
   }
- static Future<bool> login(String email, String password) async {
-  try {
-    final response = await http.post(
-      Uri.parse(loginUrl),
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-      body: json.encode({
-        "email": email,
-        "password": password,
-      }),
-    );
 
-    if (response.statusCode == 200) {
-      print("✅ Login Successful: ${response.body}"); 
-      return true;  // Return true for success
-    } else {
-      print("❌ Login Failed: ${response.statusCode} - ${response.body}");
-      return false; // Return false for failure
+  static Future<bool> login(String email, String password) async {
+    try {
+      final response = await http.post(Uri.parse(loginUrl),
+        headers: {
+          "Access": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: json.encode({"email": email, "password": password}));
+        if(response.statusCode == 200){
+          print('Successfully loged');
+          return true;
+        }else{  
+          print("failed to login ${response.statusCode} -${response.body}");
+          return false;
+        }
+    } catch (e) {
+      print('Error $e');
+      return false;
     }
-  } catch (e) {
-    print("⚠️ Error: $e");
-    return false;
   }
-}
-
-
+  
 }

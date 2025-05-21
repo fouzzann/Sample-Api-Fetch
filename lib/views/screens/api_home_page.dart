@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample_api_practice/model/api_model.dart';
 import 'package:sample_api_practice/service/api_service.dart';
-import 'package:sample_api_practice/utils/them.dart';
+import 'package:sample_api_practice/utils/theme.dart';
 import 'package:sample_api_practice/views/screens/login_page.dart';
 
 class UserListScreen extends StatefulWidget {
@@ -14,6 +14,30 @@ class UserListScreen extends StatefulWidget {
 
 class _UserListScreenState extends State<UserListScreen> {
   late Future<List<User>> userList;
+  void showDiolog() {
+    showDialog(
+        context: context, 
+        builder: (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              title: Text(
+                'Logout',
+              ),
+              content: Text('Are you sure you want to logout?'), 
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: Text('No')),
+                TextButton(
+                    onPressed: () {
+                      Get.to(() => LoginPage());
+                    },
+                    child: Text('Yes')),
+              ],
+            ));
+  }
+
   @override
   void initState() {
     userList = ApiService.fetchUser();
@@ -28,8 +52,10 @@ class _UserListScreenState extends State<UserListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(backgroundColor: AppColors.backgroundColor,
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
         actions: [
           IconButton(
               onPressed: () {
@@ -38,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
               icon: Icon(Icons.refresh)),
           IconButton(
               onPressed: () {
-                Get.to(() => LoginPage());
+                showDiolog();
               },
               icon: Icon(Icons.logout))
         ],
@@ -71,7 +97,8 @@ class _UserListScreenState extends State<UserListScreen> {
                 itemCount: users.length,
                 itemBuilder: (context, index) {
                   final user = users[index];
-                  return Card(color: AppColors.backgroundColor,
+                  return Card(
+                    color: AppColors.backgroundColor,
                     margin: EdgeInsets.all(8),
                     child: Row(
                       children: [

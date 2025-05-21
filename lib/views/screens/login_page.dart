@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sample_api_practice/service/api_service.dart';
-import 'package:sample_api_practice/utils/them.dart';
+import 'package:sample_api_practice/utils/theme.dart';
 import 'package:sample_api_practice/views/screens/api_home_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,11 +9,13 @@ class LoginPage extends StatefulWidget {
 
   @override
   State<LoginPage> createState() => _LoginPageState();
-}
+} 
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emialController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +73,23 @@ class _LoginPageState extends State<LoginPage> {
               GestureDetector(
                 onTap: () async {
                   bool success = await ApiService.login(
-                    emialController.text,
-                    passwordController.text,
-                  );
-
+                      emialController.text, passwordController.text);
                   if (success) {
-                    print("✅ Successfully Logged In!");
-                    Get.to(()=>UserListScreen());
-                  } else {  
-                    print("❌ Login Failed!");
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Login successfull'),
+                      backgroundColor: Colors.green,
+                      duration: Duration(seconds: 3),
+                    ));
+                    Get.to(() => UserListScreen());
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        'Login failed please try again',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 3),
+                    ));
                   }
                 },
                 child: Container(
